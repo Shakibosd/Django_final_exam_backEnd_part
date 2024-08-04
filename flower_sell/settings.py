@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-# CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com/','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com/','https://*.127.0.0.1']
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
