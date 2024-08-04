@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com/','https://*.127.0.0.1']
+# CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com/','https://*.127.0.0.1']
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
@@ -113,7 +113,7 @@ WSGI_APPLICATION = 'flower_sell.wsgi.application'
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://flower_sell_8jnr_user:Z9KXHdEW2aMDbkJStinSR2W7SBhLnhcF@dpg-cqn6sj08fa8c73an0i3g-a.oregon-postgres.render.com/flower_sell_8jnr',
+        default='postgresql://flower_sell_fbkc_user:tWUtkbvWCat0WV5YA6uXaGd0TdkxP62o@dpg-cqnqr8lds78s739f7q7g-a.oregon-postgres.render.com/flower_sell_fbkc',
     )
 }
 
