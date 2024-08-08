@@ -12,8 +12,6 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
-from django.utils.encoding import force_str
-
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
