@@ -8,26 +8,44 @@ from .models import Order
 from flowers.models import Flower
 from .serializers import OrderSerializer, OrderCreateSerializer, OrderSerializerForCreate
 from .constants import PENDING, COMPLETED
-from rest_framework.permissions import IsAuthenticated
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from rest_framework import generics
+from .models import Order
+from .serializers import OrderSerializer
 
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all().select_related('user', 'flower')
+# class OrderViewSet(viewsets.ModelViewSet):
+#     queryset = Order.objects.all().select_related('user', 'flower')
 
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return OrderCreateSerializer
-        return OrderSerializer
+#     def get_serializer_class(self):
+#         if self.action == 'create':
+#             return OrderCreateSerializer
+#         return OrderSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
     
-    @action(detail=False, methods=['get'])
-    def my_orders(self, request):
+#     @action(detail=False, methods=['get'])
+#     def my_orders(self, request):
+#         orders = Order.objects.filter(user=request.user)
+#         serializer = self.get_serializer(orders, many=True)
+#         return Response(serializer.data)
+
+class OrderAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+       
         orders = Order.objects.filter(user=request.user)
-        serializer = self.get_serializer(orders, many=True)
+        
+        serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = OrderCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class OrderView(APIView):
     def post(self, request, *args, **kwargs):
