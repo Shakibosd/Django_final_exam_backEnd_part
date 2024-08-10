@@ -74,12 +74,3 @@ class CommentAPIView(APIView):
             )
             return Response({"comment created"}, status=status.HTTP_201_CREATED)
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
-
-    
-
-class CheckPurchaseAPIView(APIView):
-    def get(self, request, flowerId, *args, **kwargs):
-        user = request.user
-        flower = get_object_or_404(Flower, id=flowerId)
-        purchased = Order.objects.filter(user=user, flower=flower).exists()
-        return Response({"purchased": purchased})
