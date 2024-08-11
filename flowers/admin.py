@@ -8,4 +8,4 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['name', 'body', 'created_on']
 
 admin.site.register(Flower, FlowerAdmin)
-admin.site.register(Comment, CommentAdmin)
+admin.site.register(Comment, CommentAdmin)  

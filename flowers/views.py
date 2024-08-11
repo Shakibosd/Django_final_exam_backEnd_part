@@ -57,20 +57,16 @@ class CommentAPIView(APIView):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             flowerId = serializer.validated_data['flowerId']
-            user = request.user
             flower = get_object_or_404(Flower, id=flowerId)
-
-            # Check if the user has purchased this flower
-            if not Order.objects.filter(user=user, flower=flower).exists():
-                return Response({"error": "You need to purchase this flower before commenting."}, status=status.HTTP_403_FORBIDDEN)
+            user = request.user
 
             names = serializer.validated_data['names']
-            comment = serializer.validated_data['comment']
+            body = serializer.validated_data['comment']
 
-            Comment.objects.create(
-                flower=flower,
-                name=names,
-                body=comment,
-            )
-            return Response({"comment created"}, status=status.HTTP_201_CREATED)
-        return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
+            # Save the comment
+            comment = Comment.objects.create(flower=flower, name=names, body=body)
+            comment.save()
+
+            return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
