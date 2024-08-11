@@ -1,6 +1,6 @@
 # views.py
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+
 from orders.models import Order
 from .serializers import FlowerSerializer, CommentsSerializer
 from rest_framework.views import APIView
@@ -42,18 +42,8 @@ class FlowerDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class CommentViewSet(viewsets.ModelViewSet):
-
     queryset = Comment.objects.all()
     serializer_class = CommentsSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        flower_id = self.request.data.get('flowerId')
-        user = self.request.user
-        # Check if the user has bought the product
-        if not Order.objects.filter(user=user, flower_id=flower_id).exists():
-            raise Response("You are not allowed to comment on this flower.")
-        serializer.save(user=user, flower_id=flower_id)
 
 class CommentShowAPIView(generics.ListAPIView):
     serializer_class = CommentsSerializer
@@ -80,10 +70,4 @@ class CommentAPIView(APIView):
             return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CheckPurchaseAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, flowerId):
-        user = request.user
-        has_purchased = Order.objects.filter(user=user, flower_id=flowerId).exists()
-        return Response({"has_purchased": has_purchased})
+    
