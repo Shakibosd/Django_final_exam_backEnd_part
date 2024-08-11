@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Flower(models.Model):
     title = models.CharField(max_length=100)
@@ -13,6 +14,7 @@ class Flower(models.Model):
 
 class Comment(models.Model):
     flower = models.ForeignKey(Flower, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)

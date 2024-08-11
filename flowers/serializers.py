@@ -15,7 +15,9 @@ class CommentsSerializer(serializers.ModelSerializer):
 #post comment serializer
 class CommentSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
+    userId = serializers.IntegerField()
     names = serializers.CharField(max_length=100)
     comment = serializers.CharField(max_length=1000)
 
-
+class CheckOrder(serializers.Serializer):
+    flowerId = serializers.IntegerField()
