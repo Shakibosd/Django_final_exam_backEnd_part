@@ -55,16 +55,26 @@ class CommentShowAPIView(generics.ListAPIView):
 
 class CommentAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = CommentsSerializer(data=request.data)
-        if serializer.is_valid():
-            flowerId = serializer.validated_data['flowerId']
-            flower = get_object_or_404(Flower, id=flowerId)
-            user = request.user
+        try:
+            flower_id = request.data.get('flowerId')
+            name = request.data.get('names')
+            comment_text = request.data.get('comment')
 
-            # Check if the user has purchased the flower
-            if not Order.objects.filter(user=user, flower=flower).exists():
-                return Response({"message": "You need to purchase the flower to comment."}, status=status.HTTP_403_FORBIDDEN)
+            # Validate inputs
+            if not all([flower_id, name, comment_text]):
+                return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-            Comment.objects.create(flower=flower, name=serializer.validated_data['names'], body=serializer.validated_data['comment'])
+            # Get the flower object
+            flower = Flower.objects.get(id=flower_id)
+            
+            # Create a new comment
+            comment = Comment.objects.create(flower=flower, name=name, comment=comment_text)
+            comment.save()
 
-            return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Comment created successfully."}, status=status.HTTP_201_CREATED)
+
+        except Flower.DoesNotExist:
+            return Response({"error": "Flower not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
