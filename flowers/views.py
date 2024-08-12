@@ -1,6 +1,5 @@
-# views.py
+#https://docs.google.com/spreadsheets/d/1edlnD8h-s5itNyxCbNrd8s_munC-nMslM_H0IL-QWcs/edit?gid=0#gid=0
 from rest_framework import viewsets
-
 from orders.models import Order
 from .serializers import FlowerSerializer, CommentsSerializer
 from rest_framework.views import APIView
@@ -13,6 +12,9 @@ from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
 from flowers.serializers import CheckOrder
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+from rest_framework.decorators import api_view, permission_classes
 
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = Flower.objects.all()
@@ -74,19 +76,26 @@ class CommentAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CheckOrder(APIView):
-    permission_classes = [IsAuthenticated] 
+class CheckOrderView(APIView):
+    # permission_classes = [IsAuthenticated]    
 
     def post(self, request):
-        serializer = CheckOrder(data=request.data)
-
-        if serializer.is_valid():
-            flowerId = serializer.validated_data.get('flowerId')
+        flowerId = request.data.get('flowerId')
+        
+        if flowerId:
             try:
                 flower = Flower.objects.get(id=flowerId)
                 order_exists = Order.objects.filter(flower=flower).exists()
-                return Response(order_exists, status=status.HTTP_200_OK)
+                return Response({'order_exists': order_exists}, status=status.HTTP_200_OK)
             except Flower.DoesNotExist:
-                return Response(False, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error': 'Flower not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+        
 
-        return Response(False, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+def admin_dashboard(request):
+    if request.user.is_staff:
+        return Response({"message": "Welcome to the admin dashboard!"}, status=200)
+    else:
+        return Response({"message": "Access denied: You are not an admin."}, status=403)
