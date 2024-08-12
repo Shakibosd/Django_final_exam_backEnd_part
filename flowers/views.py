@@ -60,6 +60,9 @@ class CommentAPIView(APIView):
             flower = get_object_or_404(Flower, id=flowerId)
             user = request.user
 
+            if not Order.objects.filter(user=user, flower=flower).exists():
+                return Response({"message": "You need to purchase the flower to comment."}, status=status.HTTP_403_FORBIDDEN)
+
             names = serializer.validated_data['names']
             body = serializer.validated_data['comment']
 
@@ -69,5 +72,6 @@ class CommentAPIView(APIView):
 
             return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     
