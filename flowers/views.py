@@ -56,19 +56,16 @@ class CommentShowAPIView(generics.ListAPIView):
 class CommentAPIView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            flower_id = request.data.get('flowerId')
+            flowerId = request.data.get('flowerId')
             name = request.data.get('names')
-            comment_text = request.data.get('comment')
+            usertext = request.data.get('comment')
 
-            # Validate inputs
-            if not all([flower_id, name, comment_text]):
+            if not all([flowerId, name, usertext]):
                 return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Get the flower object
-            flower = Flower.objects.get(id=flower_id)
-            
-            # Create a new comment
-            comment = Comment.objects.create(flower=flower, name=name, comment=comment_text)
+            flower = Flower.objects.get(id=flowerId)
+    
+            comment = Comment.objects.create(flower=flower, name=name, comment=usertext)
             comment.save()
 
             return Response({"message": "Comment created successfully."}, status=status.HTTP_201_CREATED)
