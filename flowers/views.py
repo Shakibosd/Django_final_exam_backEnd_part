@@ -47,24 +47,23 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class CommentShowAPIView(generics.ListAPIView):
     serializer_class = CommentsSerializer
-    
     def get_queryset(self):
         postId = self.kwargs["postId"]
-        flower = Flower.objects.get(id=postId)
-        return Comment.objects.filter(flower=flower)
-
+        flower = Flower.objects.get(id = postId)
+        return Comment.objects.filter(flower = flower)
+        
 class CommentAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = CommentsSerializer(data=request.data)
+        serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            flowerId = serializer.validated_data['flowerId']
+            flowerId = serializer.validated_data['flowerId']   
+            names = serializer.validated_data['names']   
+            comment = serializer.validated_data['comment']   
             flower = get_object_or_404(Flower, id=flowerId)
-            user = request.user
-
-            # Check if the user has purchased the flower
-            if not Order.objects.filter(user=user, flower=flower).exists():
-                return Response({"message": "You need to purchase the flower to comment."}, status=status.HTTP_403_FORBIDDEN)
-
-            Comment.objects.create(flower=flower, name=serializer.validated_data['names'], body=serializer.validated_data['comment'])
-
-            return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
+            Comment.objects.create(
+                flower=flower,
+                name=names,
+                body=comment,
+            )
+            return Response({"comment created"}, status=status.HTTP_201_CREATED)
+        return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
