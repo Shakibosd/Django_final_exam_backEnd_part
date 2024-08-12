@@ -16,6 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
+from .permissions import HasOrdered
 
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = Flower.objects.all()
@@ -76,8 +77,6 @@ class CommentShowAPIView(generics.ListAPIView):
 #             return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework.permissions import IsAuthenticated
-from .permissions import HasOrdered
 
 class CommentAPIView(APIView):
     permission_classes = [IsAuthenticated, HasOrdered]
@@ -115,14 +114,19 @@ class CommentAPIView(APIView):
 
 class CheckOrderView(APIView):
     permission_classes = [IsAuthenticated, HasOrdered]
-    def post(self, request, *args, **kwargs):
-        flowerId = request.data.get('flowerId')
-        flower = get_object_or_404(Flower, id=flowerId)
-        user = request.user
 
-        if Order.objects.filter(user=user, flower=flower).exists():
-            return Response({"order_exists": True}, status=status.HTTP_200_OK)
-        return Response({"order_exists": False}, status=status.HTTP_403_FORBIDDEN)
+    def post(self, request, *args, **kwargs):
+        serializer = CheckOrder(data=request.data)
+        if serializer.is_valid():
+            flowerId = serializer.validated_data['flowerId']
+            flower = get_object_or_404(Flower, id=flowerId)
+            user = request.user
+
+            if Order.objects.filter(user=user, flower=flower).exists():
+                return Response({"order_exists": True}, status=status.HTTP_200_OK)
+            return Response({"order_exists": False}, status=status.HTTP_403_FORBIDDEN)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
 
 @api_view(['GET'])
