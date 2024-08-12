@@ -21,7 +21,3 @@ class CommentSerializer(serializers.Serializer):
 
 class CheckOrder(serializers.Serializer):
     flowerId = serializers.IntegerField()
-
-    class Meta:
-        model = Flower
-        fields = ['flowerId']
