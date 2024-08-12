@@ -17,7 +17,7 @@ class Comment(models.Model):
     name = models.CharField(max_length=100)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)  # Allow null and blank
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True) 
 
     def __str__(self):
         return f'Comment by {self.name} on {self.flower}'
