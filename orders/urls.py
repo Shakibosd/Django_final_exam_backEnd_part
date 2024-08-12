@@ -8,6 +8,5 @@ router = DefaultRouter()
 urlpatterns = [
     # path('', include(router.urls)),
     path('create_order/', OrderView.as_view(), name='create_order'),
-    # path('orders/', OrderAPIView.as_view(), name='order-list'),
     path('my_orders/', OrderAPIView.as_view(), name='my-orders'),
 ]
