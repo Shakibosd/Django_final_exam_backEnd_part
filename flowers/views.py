@@ -1,5 +1,7 @@
 # views.py
 from rest_framework import viewsets
+
+from orders.models import Order
 from .serializers import FlowerSerializer, CommentsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -54,16 +56,18 @@ class CommentAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            flowerId = serializer.validated_data['flowerId']   
-            names = serializer.validated_data['names']   
-            comment = serializer.validated_data['comment']   
+            flowerId = serializer.validated_data['flowerId']
             flower = get_object_or_404(Flower, id=flowerId)
-            Comment.objects.create(
-                flower=flower,
-                name=names,
-                body=comment,
-            )
-            return Response({"comment created"}, status=status.HTTP_201_CREATED)
-        return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
+            user = request.user
 
-        
+            names = serializer.validated_data['names']
+            body = serializer.validated_data['comment']
+
+            # Save the comment
+            comment = Comment.objects.create(flower=flower, name=names, body=body)
+            comment.save()
+
+            return Response({"message": "Comment created"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
