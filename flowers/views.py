@@ -11,6 +11,8 @@ from .models import Flower, Comment
 from rest_framework import generics
 from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+
 
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = Flower.objects.all()
@@ -69,3 +71,22 @@ class CommentAPIView(APIView):
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CheckPurchaseView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, flowerId):
+        user = request.user
+        try:
+            # Check if the flower exists
+            flower = Flower.objects.get(id=flowerId)
+
+            # Check if the user has purchased this flower
+            has_purchased = Order.objects.filter(user=user, flower=flower).exists()
+
+            return Response({'hasPurchased': has_purchased}, status=status.HTTP_200_OK)
+
+        except Flower.DoesNotExist:
+            return Response({'error': 'Flower not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
