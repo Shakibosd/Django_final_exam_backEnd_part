@@ -5,3 +5,4 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['user', 'flower', 'quantity', 'status', 'order_date']
 
 admin.site.register(Order, OrderAdmin)
+    
