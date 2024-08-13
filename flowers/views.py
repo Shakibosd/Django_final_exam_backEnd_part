@@ -72,6 +72,8 @@ class CommentAPIView(APIView):
 
 
 class CheckPurchaseView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, flowerId):
         user = request.user
         try:
