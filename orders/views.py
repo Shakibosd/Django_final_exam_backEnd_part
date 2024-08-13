@@ -14,23 +14,6 @@ from rest_framework import generics
 from .models import Order
 from .serializers import OrderSerializer
 
-# class OrderViewSet(viewsets.ModelViewSet):
-#     queryset = Order.objects.all().select_related('user', 'flower')
-
-#     def get_serializer_class(self):
-#         if self.action == 'create':
-#             return OrderCreateSerializer
-#         return OrderSerializer
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
-    
-#     @action(detail=False, methods=['get'])
-#     def my_orders(self, request):
-#         orders = Order.objects.filter(user=request.user)
-#         serializer = self.get_serializer(orders, many=True)
-#         return Response(serializer.data)
-
 class OrderAPIView(APIView):
     def get(self, request, *args, **kwargs):
        
