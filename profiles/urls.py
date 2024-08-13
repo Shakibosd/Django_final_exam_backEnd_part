@@ -9,5 +9,4 @@ router.register(r'pass_cng', ChangePasswordViewSet, basename='pass_cng')
 urlpatterns = [
     path('', include(router.urls)),
     path('user/<int:id>/', UserProfileDetail.as_view(), name='user-detail'),
-    # path('pass_change/', ChangePasswordAPIView.as_view(), name='pass_change'),
 ]
