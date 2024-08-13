@@ -1,7 +1,4 @@
-# views.py
 from rest_framework import viewsets
-
-from orders.models import Order
 from .serializers import FlowerSerializer, CommentsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -67,5 +64,4 @@ class CommentAPIView(APIView):
             )
             return Response({"comment created"}, status=status.HTTP_201_CREATED)
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
-
 
