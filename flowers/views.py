@@ -81,7 +81,7 @@ class CheckPurchaseView(APIView):
             flower = Flower.objects.get(id=flowerId)
 
             has_purchased = Order.objects.filter(user=user, flower=flower).exists()
-
+            print(has_purchased)
             return Response({'hasPurchased': has_purchased}, status=status.HTTP_200_OK)
 
         except Flower.DoesNotExist:
