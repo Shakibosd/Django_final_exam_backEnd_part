@@ -72,15 +72,11 @@ class CommentAPIView(APIView):
 
 
 class CheckPurchaseView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request, flowerId):
         user = request.user
         try:
-            # Check if the flower exists
             flower = Flower.objects.get(id=flowerId)
 
-            # Check if the user has purchased this flower
             has_purchased = Order.objects.filter(user=user, flower=flower).exists()
 
             return Response({'hasPurchased': has_purchased}, status=status.HTTP_200_OK)
