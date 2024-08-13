@@ -73,6 +73,10 @@ class CheckPurchaseView(APIView):
 
     def get(self, request, flowerId):
         user = request.user
+
+        if user.is_anonymous:
+            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
             flower = Flower.objects.get(id=flowerId)
 
