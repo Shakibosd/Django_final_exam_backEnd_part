@@ -11,7 +11,6 @@ from .models import Flower, Comment
 from rest_framework import generics
 from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
 
 
 class FlowerViewSet(viewsets.ModelViewSet):
@@ -72,7 +71,6 @@ class CommentAPIView(APIView):
 
 
 class CheckPurchaseView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, flowerId):
         user = request.user
