@@ -12,7 +12,6 @@ from rest_framework import generics
 from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
 
-
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = Flower.objects.all()
     serializer_class = FlowerSerializer
