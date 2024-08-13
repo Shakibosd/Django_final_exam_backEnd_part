@@ -17,3 +17,4 @@ class CommentSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
     names = serializers.CharField(max_length=100)
     comment = serializers.CharField(max_length=1000)
+
