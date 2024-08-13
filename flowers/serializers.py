@@ -18,3 +18,7 @@ class CommentSerializer(serializers.Serializer):
     names = serializers.CharField(max_length=100)
     comment = serializers.CharField(max_length=1000)
 
+
+    class Meta:
+        model = Comment
+        fields = ['flowerId', 'names', 'comment']

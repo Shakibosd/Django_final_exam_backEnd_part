@@ -50,20 +50,24 @@ class CommentShowAPIView(generics.ListAPIView):
         flower = Flower.objects.get(id = postId)
         return Comment.objects.filter(flower = flower)
         
-class CommentAPIView(APIView):
+class CommentAPIView(APIView):        
     def post(self, request, *args, **kwargs):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            flowerId = serializer.validated_data['flowerId']   
-            names = serializer.validated_data['names']   
-            comment = serializer.validated_data['comment']   
-            flower = get_object_or_404(Flower, id=flowerId)
-            Comment.objects.create(
-                flower=flower,
-                name=names,
-                body=comment,
-            )
-            return Response({"comment created"}, status=status.HTTP_201_CREATED)
+            try:
+                flowerId = serializer.validated_data['flowerId']   
+                names = serializer.validated_data['names']   
+                comment = serializer.validated_data['comment']   
+                flower = get_object_or_404(Flower, id=flowerId)
+                Comment.objects.create(
+                    flower=flower,
+                    name=names,
+                    body=comment,
+                )
+                return Response({"comment created"}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
+
     
     
