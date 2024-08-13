@@ -69,23 +69,3 @@ class CommentAPIView(APIView):
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CheckPurchaseView(APIView):
-
-    def get(self, request, flowerId):
-        user = request.user
-
-        if user.is_anonymous:
-            return Response({'error': 'User is not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            flower = Flower.objects.get(id=flowerId)
-
-            has_purchased = Order.objects.filter(user=user, flower=flower).exists()
-            print(has_purchased)
-            return Response({'hasPurchased': has_purchased}, status=status.HTTP_200_OK)
-
-        except Flower.DoesNotExist:
-            return Response({'error': 'Flower not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
