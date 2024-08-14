@@ -1,11 +1,12 @@
 # views.py
 from rest_framework import viewsets
-from .serializers import FlowerSerializer, CommentsSerializer
+from .serializers import CommentCheckOrderSerializer, FlowerSerializer, CommentsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from .models import Flower, Comment
+from orders.models import Order
 from rest_framework import generics
 from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
@@ -69,5 +70,16 @@ class CommentAPIView(APIView):
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
 
-    
-    
+
+class CommentCheckOrderAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = CommentCheckOrderSerializer(data=request.query_params)
+        if serializer.is_valid():
+            flower_id = serializer.validated_data['flowerId']
+            user = request.user
+            flower = get_object_or_404(Flower, id=flower_id)
+
+            order_exists = Order.objects.filter(user=user, flower=flower).exists()
+
+            return Response({"order_exists": order_exists}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

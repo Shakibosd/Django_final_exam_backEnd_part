@@ -22,3 +22,6 @@ class CommentSerializer(serializers.Serializer):
     class Meta:
         model = Comment
         fields = ['flowerId', 'names', 'comment']
+
+class CommentCheckOrderSerializer(serializers.Serializer):
+    flowerId = serializers.ImageField()
