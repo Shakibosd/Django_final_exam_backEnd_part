@@ -23,5 +23,6 @@ class CommentSerializer(serializers.Serializer):
         model = Comment
         fields = ['flowerId', 'names', 'comment']
 
+        
 class CommentCheckOrderSerializer(serializers.Serializer):
-    flowerId = serializers.ImageField()
+    flowerId = serializers.IntegerField()

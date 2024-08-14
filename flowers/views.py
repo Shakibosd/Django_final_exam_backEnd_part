@@ -75,9 +75,9 @@ class CommentCheckOrderAPIView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = CommentCheckOrderSerializer(data=request.query_params)
         if serializer.is_valid():
-            flower_id = serializer.validated_data['flowerId']
+            flowerId = serializer.validated_data['flowerId']
             user = request.user
-            flower = get_object_or_404(Flower, id=flower_id)
+            flower = get_object_or_404(Flower, id=flowerId)
 
             order_exists = Order.objects.filter(user=user, flower=flower).exists()
 
