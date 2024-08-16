@@ -32,11 +32,12 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
+# CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
-# AUTH_USER_MODEL = "accounts.CustomUser"
+# AUTH_USER_MODEL = "admins.CustomUser"
+
 CORS_ALLOW_ALL_ORIGINS = True
 # Application definition    
 
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'flowers',
     'orders',
     'profiles',
+    'admins',
     'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
