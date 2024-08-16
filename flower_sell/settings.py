@@ -34,7 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
 
-LOGIN_URL  = "https://66bee5e24e5489b6818cf2fd--dancing-taffy-2737df.netlify.app/login.html"
+LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
 # AUTH_USER_MODEL = "admins.CustomUser"
 
