@@ -142,6 +142,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
 }
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 

@@ -1,15 +1,15 @@
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from admins.models import CustomUser
 from flowers.models import Flower
 from flowers.serializers import FlowerSerializer
-from .models import Post
-from .serializers import PostSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from rest_framework import status
+from rest_framework.decorators import api_view
 
 #admin deshboard btn view
 class IsAdminView(APIView): 
@@ -24,7 +24,7 @@ class IsAdminView(APIView):
 
 # Post views
 class PostListView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         posts = Flower.objects.all()
@@ -34,6 +34,7 @@ class PostListView(APIView):
     def post(self, request):
         print("inside flower post")
         serializer = FlowerSerializer(data=request.data)
+        # print(serializer.data)
         if serializer.is_valid():
             print("serrilizer is valid")
             serializer.save(author=request.user)
@@ -43,7 +44,7 @@ class PostListView(APIView):
 
 
 class PostDetailView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         try:
@@ -84,11 +85,12 @@ class PostDetailView(APIView):
 
 #user list
 class UserListView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        users = User.objects.all()
+        users = User.objects.filter(is_staff=False)
         serializer = UserSerializer(users, many=True)
+        print(serializer.data)
         return Response(serializer.data)
 
 #user details     
@@ -118,3 +120,26 @@ class UserDetailView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+def disable_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        user.is_disabled = True
+        user.save()
+        return Response({'message': f'User {user.username} disabled successfully.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['PATCH'])
+def enable_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        user.is_disabled = False
+        user.save()
+        return Response({'message': f'User {user.username} enabled successfully.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+
