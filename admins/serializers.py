@@ -1,12 +1,19 @@
-# from rest_framework import serializers
-# from .models import Post, CustomUser
+from rest_framework import serializers
+from .models import Post
+from .models import CustomUser
 
-# class PostSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Post
-#         fields = ['id', 'title', 'content', 'price', 'category', 'stock', 'image']
+#post serializer
+class PostSerializer(serializers.ModelSerializer):
+    author_name = serializers.SerializerMethodField()
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['id', 'username', 'email', 'is_disabled']
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'price', 'image', 'category', 'stock', 'author_name']
+
+
+#user serrializer
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_disabled']
+

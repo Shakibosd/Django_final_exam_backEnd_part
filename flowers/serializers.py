@@ -4,7 +4,7 @@ from .models import Flower, Comment
 class FlowerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flower
-        fields = ['id', 'title', 'description', 'price', 'image', 'category', 'stock']
+        fields = ['title', 'description', 'price', 'image', 'category', 'stock']
 
 class CommentsSerializer(serializers.ModelSerializer):
     class Meta:

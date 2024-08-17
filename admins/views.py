@@ -1,8 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from flowers.models import Flower
+from flowers.serializers import FlowerSerializer
+from .models import Post
+from .serializers import PostSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+from rest_framework import status
 
-class IsAdminView(APIView):
+#admin deshboard btn view
+class IsAdminView(APIView): 
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -11,106 +21,100 @@ class IsAdminView(APIView):
             return Response({"is_admin": True})
         return Response({"is_admin": False})
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework.permissions import IsAdminUser
-# from .models import Post, CustomUser
-# from .serializers import PostSerializer, UserSerializer
 
-# class UserAPIView(APIView):
-#     permission_classes = [IsAdminUser]
+# Post views
+class PostListView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-#     def get(self, request, *args, **kwargs):
-#         users = CustomUser.objects.all()
-#         serializer = UserSerializer(users, many=True)
-#         return Response(serializer.data)
+    def get(self, request):
+        posts = Flower.objects.all()
+        serializer = FlowerSerializer(posts, many=True)
+        return Response(serializer.data)
 
-#     def post(self, request, *args, **kwargs):
-#         serializer = UserSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        print("inside flower post")
+        serializer = FlowerSerializer(data=request.data)
+        if serializer.is_valid():
+            print("serrilizer is valid")
+            serializer.save(author=request.user)
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class UserDetailAPIView(APIView):
-#     permission_classes = [IsAdminUser]
 
-#     def get_object(self, pk):
-#         try:
-#             return CustomUser.objects.get(pk=pk)
-#         except CustomUser.DoesNotExist:
-#             return None
+class PostDetailView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-#     def get(self, request, pk, *args, **kwargs):
-#         user = self.get_object(pk)
-#         if not user:
-#             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-#         serializer = UserSerializer(user)
-#         return Response(serializer.data)
+    def get(self, request, id):
+        try:
+            post = Flower.objects.get(pk=id)
+        except Flower.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = FlowerSerializer(post)
+        return Response(serializer.data)
 
-#     def patch(self, request, pk, *args, **kwargs):
-#         user = self.get_object(pk)
-#         if not user:
-#             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-#         serializer = UserSerializer(user, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, id):
+        try:
+            post = Flower.objects.get(pk=id)
+        except Flower.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
-#     def delete(self, request, pk, *args, **kwargs):
-#         user = self.get_object(pk)
-#         if not user:
-#             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-#         user.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user != post.author:
+            return Response({"error": "You do not have permission to edit this post"}, status=status.HTTP_403_FORBIDDEN)
 
-# class PostAPIView(APIView):
-#     permission_classes = [IsAdminUser]
+        serializer = FlowerSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def get(self, request, *args, **kwargs):
-#         posts = Post.objects.all()
-#         serializer = PostSerializer(posts, many=True)
-#         return Response(serializer.data)
+    def delete(self, request, id):
+        try:
+            post = Flower.objects.get(pk=id)
+        except Flower.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
-#     def post(self, request, *args, **kwargs):
-#         serializer = PostSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user != post.author:
+            return Response({"error": "You do not have permission to delete this post"}, status=status.HTTP_403_FORBIDDEN)
 
-# class PostDetailAPIView(APIView):
-#     permission_classes = [IsAdminUser]
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
 
-#     def get_object(self, pk):
-#         try:
-#             return Post.objects.get(pk=pk)
-#         except Post.DoesNotExist:
-#             return None
+#user list
+class UserListView(APIView):
+    permission_classes = [IsAdminUser]
 
-#     def get(self, request, pk, *args, **kwargs):
-#         post = self.get_object(pk)
-#         if not post:
-#             return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-#         serializer = PostSerializer(post)
-#         return Response(serializer.data)
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
-#     def patch(self, request, pk, *args, **kwargs):
-#         post = self.get_object(pk)
-#         if not post:
-#             return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-#         serializer = PostSerializer(post, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#user details     
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
 
-#     def delete(self, request, pk, *args, **kwargs):
-#         post = self.get_object(pk)
-#         if not post:
-#             return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-#         post.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def get(self, request, id):
+        try:
+            user = User.objects.get(pk=id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        try:
+            user = User.objects.get(pk=id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if not request.user.is_superuser:
+            return Response({"error": "Only admin can update user information"}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
