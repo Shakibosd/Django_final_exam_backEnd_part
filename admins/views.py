@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from admins.models import CustomUser
 from flowers.models import Flower
 from flowers.serializers import FlowerSerializer
 from django.contrib.auth.models import User
@@ -123,21 +122,21 @@ class UserDetailView(APIView):
 @api_view(['PATCH'])
 def disable_user(request, user_id):
     try:
-        user = CustomUser.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
         user.is_disabled = True
         user.save()
         return Response({'message': f'User {user.username} disabled successfully.'}, status=status.HTTP_200_OK)
-    except CustomUser.DoesNotExist:
+    except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['PATCH'])
 def enable_user(request, user_id):
     try:
-        user = CustomUser.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
         user.is_disabled = False
         user.save()
         return Response({'message': f'User {user.username} enabled successfully.'}, status=status.HTTP_200_OK)
-    except CustomUser.DoesNotExist:
+    except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     
 
