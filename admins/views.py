@@ -55,7 +55,7 @@ class PostDetailView(APIView):
     def put(self, request, id):
         try:
             post = Flower.objects.get(pk=id)
-        except Flower.DoesNotExist:
+        except Flower.DoesNotExist: 
             return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if request.user != post.author:
