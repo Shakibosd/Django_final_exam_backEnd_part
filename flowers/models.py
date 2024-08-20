@@ -5,9 +5,10 @@ class Flower(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    image = models.ImageField(upload_to='flowers/images/')
+    image = models.CharField(default='')
     category = models.CharField(max_length=50)
     stock = models.PositiveIntegerField(default=1)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
