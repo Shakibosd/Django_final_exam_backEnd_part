@@ -7,7 +7,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     flower = models.ForeignKey(Flower, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
-    status = models.CharField(choices=ORDER_STATUS, max_length=20, default='Pending')
+    status = models.CharField(choices=ORDER_STATUS, max_length=50, default='Pending')
     order_date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
