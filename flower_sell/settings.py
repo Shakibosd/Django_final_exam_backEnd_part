@@ -31,7 +31,7 @@ SECRET_KEY= 'django-insecure-@hx8=)@zs%d=6iehpbgdowe53j3v5s5o8q%1c(*qpg^pxc93-w'
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-# CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
