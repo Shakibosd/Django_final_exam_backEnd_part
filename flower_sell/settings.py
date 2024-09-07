@@ -170,3 +170,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SITE_ID = 1
+
+EMAIL = env('EMAIL')
+EMAIL_PASSWORD = env('EMAIL_PASSWORD')
