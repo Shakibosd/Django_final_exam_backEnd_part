@@ -5,7 +5,7 @@ class Flower(models.Model):
     title = models.CharField(max_length=70)
     description = models.TextField()
     price = models.DecimalField(max_digits=11, decimal_places=2)
-    image = models.CharField(default='')
+    image = models.CharField(default='', max_length=100)
     category = models.CharField(max_length=50)
     stock = models.PositiveIntegerField(default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
