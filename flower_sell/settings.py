@@ -31,7 +31,7 @@ SECRET_KEY=('django-insecure-@hx8=)@zs%d=6iehpbgdowe53j3v5s5o8q%1c(*qpg^pxc93-w'
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
+# CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
@@ -164,9 +164,12 @@ MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-SITE_ID = 1
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+SITE_ID=1
+
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER=env('EMAIL')
+EMAIL_HOST_PASSWORD=env('EMAIL_PASSWORD')
