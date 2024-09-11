@@ -25,13 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY= 'django-insecure-@hx8=)@zs%d=6iehpbgdowe53j3v5s5o8q%1c(*qpg^pxc93-w'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
+# ALLOWED_HOSTS = ["*"]
+# CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
@@ -171,3 +171,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SITE_ID = 1
 
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env('EMAIL')
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
