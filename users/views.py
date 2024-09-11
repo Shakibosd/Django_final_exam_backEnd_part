@@ -14,7 +14,6 @@ from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
 from django.core.mail import send_mail
 
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -50,9 +49,9 @@ def activate(request, uid64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('https://flowersell.netlify.app/register.html')
+        return redirect('http://127.0.0.1:5500/login.html')
     else:
-        return redirect('https://flowersell.netlify.app/login.html') 
+        return redirect('http://127.0.0.1:5500/register.html') 
 
 class LoginAPIView(APIView):
     serializer_class = LoginSerializer
@@ -84,5 +83,3 @@ class LogoutAPIView(APIView):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-
-
