@@ -27,3 +27,4 @@ class CommentSerializer(serializers.Serializer):
         
 class CommentCheckOrderSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
+

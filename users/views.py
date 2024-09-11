@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
 from django.core.mail import send_mail
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -83,3 +84,5 @@ class LogoutAPIView(APIView):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+
+
