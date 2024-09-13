@@ -10,6 +10,11 @@ from orders.models import Order
 from rest_framework import generics
 from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from django.core.mail import send_mail
+from .serializers import ContactFormSerializer
 
 
 class FlowerViewSet(viewsets.ModelViewSet):
@@ -85,3 +90,25 @@ class CommentCheckOrderAPIView(APIView):
             return Response({"order_exists": order_exists}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ContactFormView(APIView):
+    def post(self, request):
+        serializer = ContactFormSerializer(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data['name']
+            email = serializer.validated_data['email']
+            message = serializer.validated_data['message']
+            
+            subject = f"Contact Form Submission from {name}"
+            email_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+
+            send_mail(
+                subject,
+                email_message,
+                'your_email@example.com',  
+                ['syednazmusshakib94@gmail.com'],  
+                fail_silently=False,
+            )
+            return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

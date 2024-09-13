@@ -28,3 +28,8 @@ class CommentSerializer(serializers.Serializer):
 class CommentCheckOrderSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
 
+
+class ContactFormSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
+    message = serializers.CharField(max_length=1000)
