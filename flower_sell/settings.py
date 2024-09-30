@@ -30,8 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://django-final-exam-backend-part.onrender.com','https://*.127.0.0.1']
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
@@ -41,6 +40,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Application definition    
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     #pre
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,6 +75,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,20 +106,29 @@ TEMPLATES = [
 
 
 
-WSGI_APPLICATION = 'flower_sell.wsgi.application'
+WSGI_APPLICATION = 'flower_sell.wsgi.app'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
 # Replace the SQLite DATABASES configuration with PostgreSQL:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.tvcrrmihhojpvhnzbghn',
+        'PASSWORD': 'vBzcUi8GB9GJrPZs',
+        'HOST': 'aws-0-us-east-1.pooler.supabase.com',
+        'PORT': '6543'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -159,6 +169,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 
 # Default primary key field type
