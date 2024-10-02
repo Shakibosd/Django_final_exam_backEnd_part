@@ -28,7 +28,7 @@ class RegisterAPIView(APIView):
             print(user)
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            confirm_link = f'https://django-final-exam-backend-part.onrender.com/users/active/{uid}/{token}/'
+            confirm_link = f'https://flower-seal.vercel.app/users/active/{uid}/{token}/'
             print(confirm_link)
             email_subject = 'Confirm Your Email'
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
