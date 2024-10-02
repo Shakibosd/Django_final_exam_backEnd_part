@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", "https://flower-seal.vercel.app/"]
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
 LOGIN_URL  = "http://127.0.0.1:5500/login.html"
 
