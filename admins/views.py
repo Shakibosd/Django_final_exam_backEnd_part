@@ -6,9 +6,8 @@ from flowers.serializers import FlowerSerializer
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from rest_framework import status
-from rest_framework.decorators import api_view
 
-#admin deshboard btn view
+#ei code diye check kortesi user admin super user ki na.
 class IsAdminView(APIView): 
     permission_classes = [IsAuthenticated]
 
@@ -31,7 +30,6 @@ class PostListView(APIView):
     def post(self, request):
         print("inside flower post")
         serializer = FlowerSerializer(data=request.data)
-        # print(serializer.data)
         if serializer.is_valid():
             print("serrilizer is valid")
             serializer.save(author=request.user)
@@ -80,7 +78,7 @@ class PostDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-#user list
+#eta hocce amar web site e kotojon signup koreche tar list dekar jonno
 class UserListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -90,7 +88,7 @@ class UserListView(APIView):
         print(serializer.data)
         return Response(serializer.data)
 
-#user details     
+#eta hocce user view details kore dekar jonno     
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -119,23 +117,3 @@ class UserDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PATCH'])
-def disable_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        user.is_disabled = True
-        user.save()
-        return Response({'message': f'User {user.username} disabled successfully.'}, status=status.HTTP_200_OK)
-    except User.DoesNotExist:
-        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['PATCH'])
-def enable_user(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        user.is_disabled = False
-        user.save()
-        return Response({'message': f'User {user.username} enabled successfully.'}, status=status.HTTP_200_OK)
-    except User.DoesNotExist:
-        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-    

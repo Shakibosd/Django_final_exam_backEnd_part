@@ -1,6 +1,5 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
@@ -10,10 +9,10 @@ from .serializers import OrderSerializer, OrderCreateSerializer, OrderSerializer
 from .constants import PENDING, COMPLETED
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from rest_framework import generics
 from .models import Order
 from .serializers import OrderSerializer
 
+#eta hocce flower order korar jonno post and get
 class OrderAPIView(APIView):
     def get(self, request, *args, **kwargs):
        
@@ -30,6 +29,7 @@ class OrderAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+#eta hocce order history dekar jonno and order view dekar jonno and flower kinar pore email jabe and flower buy korle quentity kome jabe
 class OrderView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializerForCreate(data=request.data)

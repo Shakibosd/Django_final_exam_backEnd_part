@@ -14,10 +14,12 @@ from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
 from django.core.mail import send_mail
 
+#user dekar jonno
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+#user register korar jonno
 class RegisterAPIView(APIView):
     serializer_class = RegistrationSerializer
 
@@ -53,6 +55,7 @@ def activate(request, uid64, token):
     else:
         return redirect('https://flowersell.netlify.app/register.html') 
 
+#user login korar jonno
 class LoginAPIView(APIView):
     serializer_class = LoginSerializer
 
@@ -74,6 +77,7 @@ class LoginAPIView(APIView):
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#user logout korar jonno
 class LogoutAPIView(APIView):
     def get(self, request):
         user = request.user

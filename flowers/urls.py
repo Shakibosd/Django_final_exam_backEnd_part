@@ -12,5 +12,5 @@ urlpatterns = [
     path('comments_api/', CommentAPIView.as_view(), name='comments_api'),
     path('get_comment/<int:postId>/', CommentShowAPIView.as_view(), name='get_comment'),
     path('check_order/',CommentCheckOrderAPIView.as_view(), name='check_order'),
-     path('contact/', ContactFormView.as_view(), name='contact-form'),
+    path('contact/', ContactFormView.as_view(), name='contact-form'),
 ]

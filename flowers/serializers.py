@@ -12,8 +12,6 @@ class CommentsSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
 
-
-#post comment serializer
 class CommentSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
     names = serializers.CharField(max_length=100)
@@ -24,10 +22,8 @@ class CommentSerializer(serializers.Serializer):
         model = Comment
         fields = ['flowerId', 'names', 'comment']
 
-        
 class CommentCheckOrderSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
-
 
 class ContactFormSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=100)

@@ -1,4 +1,3 @@
-# views.py
 from rest_framework import viewsets
 from .serializers import CommentCheckOrderSerializer, FlowerSerializer, CommentsSerializer
 from rest_framework.views import APIView
@@ -16,7 +15,7 @@ from rest_framework import status
 from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
 
-
+#eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = Flower.objects.all()
     serializer_class = FlowerSerializer
@@ -46,6 +45,7 @@ class FlowerDetail(APIView):
         flower.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+#eta hocce flower er modde comment kora comment get post edit delete view kora jay
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentsSerializer
@@ -76,7 +76,7 @@ class CommentAPIView(APIView):
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
 
-
+#ekane check kora hocce user flower by now korese ki jodi by now kore thake tahole flower er modde comment korte parbe
 class CommentCheckOrderAPIView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = CommentCheckOrderSerializer(data=request.query_params)
@@ -90,7 +90,7 @@ class CommentCheckOrderAPIView(APIView):
             return Response({"order_exists": order_exists}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#eta hocce jodi kunu user flower buy kore tahole tar mail er modde ekta mail jabe
 class ContactFormView(APIView):
     def post(self, request):
         serializer = ContactFormSerializer(data=request.data)
