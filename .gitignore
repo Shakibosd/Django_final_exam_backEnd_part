@@ -1,3 +1,4 @@
 flower_sell/.env
 db.sqlite3
 __pycache__/
+.venv
